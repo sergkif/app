@@ -1,0 +1,19 @@
+// app global css in SCSS form
+body {
+    background-color: $black;
+    color: $white;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.widthPage {
+    width: 50%;
+}
+
+@media (max-width: 800px) {
+    .widthPage {
+        width: 90%;
+    }
+}
