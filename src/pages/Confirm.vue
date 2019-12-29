@@ -33,19 +33,6 @@ export default {
       iConfirm: false
     }
   },
-  beforeCreate () {
-    fetch('http://localhost:3000/users/me', {
-      method: 'GET',
-      headers: { 'Authorization': ('Bearer ' + localStorage.token) }
-    }).then(response => {
-      console.log(response)
-      if (response.ok) return response.json()
-    }).then(data => {
-      console.log(data)
-    }).catch(error => {
-      console.log(error)
-    })
-  },
   methods: {
     confirm () {
       if (this.iRead && this.iConfirm) this.$router.push('pay')

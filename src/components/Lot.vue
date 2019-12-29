@@ -1,25 +1,17 @@
 <template>
-    <!-- <q-card-section>style="width: 100%; position: relative;" -->
-      <!-- <div class="text-h6"> {{app.title}} </div>style="position: absolute; left: 40%; font-size: 20px;" -->
-      <!-- <div class=""> {{app.subtitle}} </div>style="position: absolute; left: 40%; top: 30%; color: rgb(90, 90, 90);" -->
-      <!-- <img src="../assets/1.png" >style="float: left;" -->
-      <!-- <q-btn unelevated rounded color="primary" label="ЗАГРУЗИТЬ"></q-btn>style="position: absolute; left: 30%; top: 55%;" -->
-      <!-- <div v-if='app.type==2'> СО ВСЕМИ ВСТРОЕННЫМИ ПОКУПКАМИ </div> style="position: absolute; left: 70%; top: 50%; color: rgb(90, 90, 90);" -->
-      <!-- <div v-else> ОФИЦИАЛЬНАЯ ЦЕНА: {{app.price}} </div>style="position: absolute; left: 40%; top: 30%; color: rgb(90, 90, 90);" -->
-    <!-- </q-card-section> -->
     <div class="q-pa-md q-gutter-sm">
       <q-banner rounded class="bg-black text-white">
         <template v-slot:avatar>
           <img
-            src="../assets/1.png"
+            :src="app.icon"
             style=""
           >
         </template>
         {{app.title}}
         <br>
-        {{app.subtitle}}
-        <div v-if='app.type==2'> СО ВСЕМИ ВСТРОЕННЫМИ ПОКУПКАМИ </div>
-        <div v-else> ОФИЦИАЛЬНАЯ ЦЕНА: {{app.price}} </div>
+        <div class="size">{{app.description}}</div>
+        <div v-if='app.free'> СО ВСЕМИ ВСТРОЕННЫМИ ПОКУПКАМИ </div>
+        <div v-else> ОФИЦИАЛЬНАЯ ЦЕНА: {{app.price}} {{app.currency}} </div>
         <template v-slot:action>
           <q-btn
             unelevated
@@ -27,7 +19,7 @@
             color="primary"
             label="ЗАГРУЗИТЬ"
             style=""
-            :to="{ path: '/login' }"
+            @click="download"
           ></q-btn>
         </template>
       </q-banner>
@@ -40,6 +32,36 @@ export default {
   data () {
     return {
     }
+  },
+  methods: {
+    async download () {
+      if (localStorage.token) {
+        await fetch('http://localhost:3000/users/me', {
+          method: 'GET',
+          headers: { 'Authorization': ('Bearer ' + localStorage.token) }
+        }).then(response => {
+          console.log(response)
+          if (response.ok) return response.json()
+        }).then(data => {
+          console.log(data)
+          if (data.status === 200) window.location = this.app.url
+          if (data.status === 402 && data.newSubscriber) this.$router.push('confirm')
+          if (data.status === 402 && !data.newSubscriber) this.$router.push('pay')
+        }).catch(error => {
+          console.log(error)
+        })
+      } else this.$router.push('login')
+    }
   }
 }
 </script>
+
+<style scoped>
+  .size {
+    white-space: nowrap; /* Отменяем перенос текста */
+    overflow: hidden; /* Обрезаем содержимое */
+    padding: 5px 0; /* Поля */
+    text-overflow: ellipsis;
+    width: 400px;
+  }
+</style>

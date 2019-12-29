@@ -25,7 +25,7 @@
           placeholder="Пароль"
           style="width: 100%;"
           :rules="[ val => !!val || 'Обязательное поле',
-                    val => val.length > 5 || 'Пароль должен быть больше 5 символов' ]">
+                    val => val.length > 6 || 'Пароль должен быть больше 6 символов' ]">
           <template v-slot:append>
             <q-icon
               ref="password"
@@ -67,6 +67,7 @@
         ></q-btn>
       </div>
     </div>
+    <q-spinner-hourglass v-if="loading" color="blue-grey" style="position: absolute; top: 45%; left: 45%; z-index: 100; width: 10%; height: 10%;"></q-spinner-hourglass>
   </q-page>
 </template>
 
@@ -80,11 +81,13 @@ export default {
         passwordConfirm: ''
       },
       isPwd: true,
-      isPwdConf: true
+      isPwdConf: true,
+      loading: false
     }
   },
   methods: {
     registration: async function () {
+      this.loading = true
       if (this.form.password === this.form.passwordConfirm) {
         await fetch('http://localhost:3000/users', {
           method: 'POST',
@@ -96,6 +99,7 @@ export default {
         }).then(response => {
           if (response.ok) return response.json()
         }).then(data => {
+          this.loading = false
           localStorage.token = data.token
           this.$router.push('confirm')
         })

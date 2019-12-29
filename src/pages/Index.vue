@@ -20,21 +20,23 @@
 
 <script>
 import Lot from '../components/Lot'
+import apps from '../statics/out.json'
 export default {
   name: 'PageIndex',
   data () {
     return {
       search: '',
-      apps: [
-        {
-          title: '#BS365 Тренировки',
-          subtitle: 'Тренируйся и получай удовольствие',
-          icon: '/src/assets/1.png',
-          type: 2,
-          price: '',
-          link: ''
-        }
-      ]
+      apps: apps
+      // apps: [
+      //   {
+      //     title: '#BS365 Тренировки',
+      //     subtitle: 'Тренируйся и получай удовольствие',
+      //     icon: '/src/assets/1.png',
+      //     type: 2,
+      //     price: '',
+      //     link: ''
+      //   }
+      // ]
     }
   },
   components: {

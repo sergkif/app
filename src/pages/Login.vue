@@ -25,7 +25,7 @@
           placeholder="Пароль"
           style="width: 100%;"
           :rules="[ val => !!val || 'Обязательное поле',
-                    val => val.length > 5 || 'Пароль должен быть больше 5 символов' ]">
+                    val => val.length > 6 || 'Пароль должен быть больше 6 символов' ]">
           <template v-slot:append>
             <q-icon
               :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -54,10 +54,13 @@
         ></q-btn>
       </div>
     </div>
+    <Error v-if="error" :errorDescription="errorDescription" :errorRedirect='errorRedirect'></Error>
+    <q-spinner-hourglass v-if="loading" color="blue-grey" style="position: absolute; top: 45%; left: 45%; z-index: 100; width: 10%; height: 10%;"></q-spinner-hourglass>
   </q-page>
 </template>
 
 <script>
+import Error from '../components/Error'
 export default {
   data () {
     return {
@@ -65,11 +68,19 @@ export default {
         email: '',
         password: ''
       },
-      isPwd: true
+      isPwd: true,
+      loading: false,
+      error: false,
+      errorDescription: 'Произошла непредвиденная ошибка: ',
+      errorRedirect: ''
     }
+  },
+  components: {
+    Error
   },
   methods: {
     login: async function () {
+      this.loading = true
       await fetch('http://localhost:3000/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,10 +90,22 @@ export default {
         })
       }).then(response => {
         if (response.ok) return response.json()
+        // if (response.status === 401) {
+        //   throw new Error('Unauthorized')
+        // }
       }).then(data => {
-        localStorage.token = data.token
-        if (data.isSub) this.$router.push('/')
-        else this.$router.push('confirm')
+        if (data) {
+          console.log(data)
+          this.loading = false
+          localStorage.token = data.token
+          if (data.isSub) this.$router.push('/')
+          else this.$router.push('confirm')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.error = true
+        this.errorDescription += err
+        this.errorRedirect = '/'
       })
     }
   }
