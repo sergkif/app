@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-md q-gutter-sm">
+    <div class="q-pa-md q-gutter-sm w-100">
       <q-banner rounded class="bg-black text-white">
         <template v-slot:avatar>
           <img
@@ -7,12 +7,10 @@
             style=""
           >
         </template>
-        {{app.title}}
+        <div style="font-size: 20px;">{{app.title}}</div>
         <br>
-        <div class="size">{{app.description}}</div>
-        <div v-if='app.free'> СО ВСЕМИ ВСТРОЕННЫМИ ПОКУПКАМИ </div>
-        <div v-else> ОФИЦИАЛЬНАЯ ЦЕНА: {{app.price}} {{app.currency}} </div>
-        <template v-slot:action>
+        <div class="size size_overflow" @click="myToggle">{{app.description}}</div>
+        <div class="bottomFlex">
           <q-btn
             unelevated
             rounded
@@ -21,6 +19,10 @@
             style=""
             @click="download"
           ></q-btn>
+          <div v-if='app.free'> СО ВСЕМИ ВСТРОЕННЫМИ ПОКУПКАМИ </div>
+          <div class="fontPrice" v-else> ОФИЦИАЛЬНАЯ ЦЕНА: {{app.price}} {{app.currency}} </div>
+        </div>
+        <template v-slot:action>
         </template>
       </q-banner>
     </div>
@@ -51,6 +53,9 @@ export default {
           console.log(error)
         })
       } else this.$router.push('login')
+    },
+    myToggle () {
+      this.$el.querySelector('.size').classList.toggle('size_overflow')
     }
   }
 }
@@ -58,10 +63,27 @@ export default {
 
 <style scoped>
   .size {
-    white-space: nowrap; /* Отменяем перенос текста */
-    overflow: hidden; /* Обрезаем содержимое */
-    padding: 5px 0; /* Поля */
+    padding: 5px 0;
+    width: 100%;
+    /* font-size: 12px; */
+    color: rgb(90, 90, 90);
+  }
+  .size_overflow {
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
-    width: 400px;
+  }
+  .w-100 {
+    width: 100%;
+  }
+  .bottomFlex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 5px;
+  }
+  .fontPrice {
+    color: rgb(90, 90, 90);
+    font-size: 10px;
   }
 </style>

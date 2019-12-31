@@ -27,16 +27,6 @@ export default {
     return {
       search: '',
       apps: apps
-      // apps: [
-      //   {
-      //     title: '#BS365 Тренировки',
-      //     subtitle: 'Тренируйся и получай удовольствие',
-      //     icon: '/src/assets/1.png',
-      //     type: 2,
-      //     price: '',
-      //     link: ''
-      //   }
-      // ]
     }
   },
   components: {
